@@ -1,8 +1,11 @@
+from fileinput import filename
+from pathlib import Path
 from lyricsgenius import Genius
 import urllib.request
 import json
 import time
 import sys
+import os
 
 perPage = 200
 username = 'momir64'
@@ -21,8 +24,7 @@ print(f'Total number of tracks: {totalSongs}')
 print()
 
 for page in range(1, pages + 1):
-    print()
-    print(f'Fetching page {page} out of {pages}:')
+    print(f'\n\nFetching page {page} out of {pages}:\n')
     url = f'http://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user={username}&api_key={LastFmKey}&format=json&limit={perPage}&page={page}'
     songs = json.loads(urllib.request.urlopen(url).read().decode())['lovedtracks']['track']
 
@@ -31,19 +33,32 @@ for page in range(1, pages + 1):
         artistName = songs[i]["artist"]["name"]
 
         for c in '<>:"/\|?*':
-            songName = songName.replace(c, '')
+            songName = songName.replace('(Remastered)', '')
+            songName = songName.replace('Remastered', '')
+            songName = songName.replace('(Acoustic)', '')
+            songName = songName.replace('Acoustic', '')
+            songName = songName.replace('(Remix)', '')
+            songName = songName.replace('Remix', '')
             artistName = artistName.replace(c, '')
+            songName = songName.replace(c, '')
+            artistName = ' '.join(artistName.split())
+            songName = ' '.join(songName.split())
+            artistName.strip()
+            songName.strip()
 
         print(f'{str(i + 1).rjust(3)}/{str(len(songs)).ljust(10)} {songName.ljust(50)} {artistName}')
-        f = open(f'arhiva/{songName} - {artistName}.txt', 'w', encoding='utf-8')
+        filePath = Path(f'arhiva/{songName} ♢ {artistName}.txt')
 
-        while True:
-            try:
-                song = genius.search_song(songName, artistName)
-                break
-            except:
-                print("               Exception occured! Trying again in 10 seconds...", end='\r')
-                time.sleep(10)
-                sys.stdout.write('\033[K')
+        if not filePath.exists() or os.path.getsize(filePath) > 10000:
+            file = open(filePath, 'w', encoding='utf-8')
 
-        f.write(song.lyrics.replace('[', '\n\n[', 1) if song is not None else '')
+            while True:
+                try:
+                    song = genius.search_song(songName, artistName)
+                    break
+                except:
+                    print("               Exception occured! Trying again in 10 seconds...", end='\r')
+                    time.sleep(10)
+                    sys.stdout.write('\033[K')
+
+            file.write(song.lyrics.replace('[', '\n\n[', 1).replace(' Lyrics', '', 1) if song is not None else '')

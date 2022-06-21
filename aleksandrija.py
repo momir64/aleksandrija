@@ -35,13 +35,14 @@ for page in range(1, pages + 1):
         for c in '<>:"/\|?*':
             artistName = artistName.replace(c, '')
             songName = songName.replace(c, '')
-        for word in ['(', 'feat.']:
-            songName = songName.split(word, 1)[0]
-        for word in ['Live', 'live', 'Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Version', 'Single Version', 'EP version', 'single version', 'Remix', 'remix', 'Radio Edit', 'Radio Session', 'Radio Mix', 'Unpeeled', 'Bonus Track', 'bonus track', 'MTV', 'Unplugged', 'Stripped', 'mtv', 'unplugged', 'stripped', 'Recorded', 'recorded', 'Piano Version', 'Demo']:
+        songName = songName.split('feat.', 1)[0]
+        songName = songName.split('Feat.', 1)[0]
+        for word in ['Live', 'live', 'Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP', 'Single', 'single', 'Remix', 'remix', 'radio', 'Radio', 'Unpeeled', 'Bonus Track', 'bonus track', 'MTV', 'Unplugged', 'Stripped', 'mtv', 'unplugged', 'stripped', 'Recorded', 'recorded', 'Piano Version', 'Instrumental', 'instrumental', 'Reimagined', 'reimagined', 'Demo', 'Edit', 'edit', 'From', 'from', 'uživo', 'Rock', 'Studio', 'Version', 'version', 'Alternative', 'Mono', 'Original', 'original', 'Classic', 'classic', 'with', 'Interlude', 'interlude', 'Orchestral', 'orchestral']:
+            songName = songName.split(f'({word}', 1)[0]
             songName = songName.split(f'- {word}', 1)[0]
         for word in ['Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Version', 'Single Version', 'EP version', 'single version', 'Remix', 'remix', 'Radio Edit', 'Radio Session', 'Radio Mix', 'Bonus Track', 'bonus track', '()']:
             songName = songName.replace(word, '')
-        for year in range(1990, date.today().year):
+        for year in range(1990, date.today().year + 1):
             for word in [f'- {year} Digital', f'- {year}', f'({year})', f'({year} )']:
                 songName = songName.replace(word, '')
 
@@ -49,6 +50,7 @@ for page in range(1, pages + 1):
         songName = ' '.join(songName.split())
         songName = songName.replace('( )', '')
         artistName = artistName.strip('- ')
+        songName = songName.rstrip('( ')
         songName = songName.strip('- ')
 
         print(f'{str(i + 1).rjust(3)}/{str(len(songs)).ljust(10)} {songName.ljust(80)} {artistName}')

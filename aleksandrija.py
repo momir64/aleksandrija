@@ -1,6 +1,6 @@
-from fileinput import filename
-from pathlib import Path
 from lyricsgenius import Genius
+from datetime import date
+from pathlib import Path
 import urllib.request
 import json
 import time
@@ -35,8 +35,16 @@ for page in range(1, pages + 1):
         for c in '<>:"/\|?*':
             artistName = artistName.replace(c, '')
             songName = songName.replace(c, '')
-        for word in ['Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Version', 'Single Version', 'EP version', 'single version', 'Version', 'version', 'Remix', 'remix', '()']:
+        for word in ['(', 'feat.']:
+            songName = songName.split(word, 1)[0]
+        for word in ['Live', 'live', 'Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Version', 'Single Version', 'EP version', 'single version', 'Remix', 'remix', 'Radio Edit', 'Radio Session', 'Radio Mix', 'Unpeeled', 'Bonus Track', 'bonus track', 'MTV', 'Unplugged', 'Stripped', 'mtv', 'unplugged', 'stripped', 'Recorded', 'recorded', 'Piano Version', 'Demo']:
+            songName = songName.split(f'- {word}', 1)[0]
+        for word in ['Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Version', 'Single Version', 'EP version', 'single version', 'Remix', 'remix', 'Radio Edit', 'Radio Session', 'Radio Mix', 'Bonus Track', 'bonus track', '()']:
             songName = songName.replace(word, '')
+        for year in range(1990, date.today().year):
+            for word in [f'- {year} Digital', f'- {year}', f'({year})', f'({year} )']:
+                songName = songName.replace(word, '')
+
         artistName = ' '.join(artistName.split())
         songName = ' '.join(songName.split())
         songName = songName.replace('( )', '')
@@ -54,8 +62,8 @@ for page in range(1, pages + 1):
                     song = genius.search_song(songName, artistName)
                     break
                 except:
-                    print('               Exception occured! Trying again in 10 seconds...', end='\r')
-                    time.sleep(10)
+                    print('               Exception occured! Trying again in 5 seconds...', end='\r')
+                    time.sleep(5)
                     sys.stdout.write('\033[K')
 
             file.write(song.lyrics.replace('[', '\n\n[', 1).replace(' Lyrics', '', 1) if song is not None else '')

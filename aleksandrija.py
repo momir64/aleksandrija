@@ -35,7 +35,7 @@ for page in range(1, pages + 1):
         for c in '<>:"/\|?*':
             artistName = artistName.replace(c, '')
             songName = songName.replace(c, '')
-        for word in ['Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Vesrion', 'Single Version', 'EP vesrion', 'single version', 'Vesrion', 'version', 'Remix', 'remix', '()']:
+        for word in ['Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Version', 'Single Version', 'EP version', 'single version', 'Version', 'version', 'Remix', 'remix', '()']:
             songName = songName.replace(word, '')
         artistName = ' '.join(artistName.split())
         songName = ' '.join(songName.split())

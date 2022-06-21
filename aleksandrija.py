@@ -29,29 +29,24 @@ for page in range(1, pages + 1):
     songs = json.loads(urllib.request.urlopen(url).read().decode())['lovedtracks']['track']
 
     for i in range(len(songs)):
-        songName = songs[i]["name"]
-        artistName = songs[i]["artist"]["name"]
+        songName = songs[i]['name']
+        artistName = songs[i]['artist']['name']
 
         for c in '<>:"/\|?*':
             artistName = artistName.replace(c, '')
             songName = songName.replace(c, '')
-        songName = songName.replace('(Remastered)', '')
-        songName = songName.replace('Remastered', '')
-        songName = songName.replace('(Acoustic)', '')
-        songName = songName.replace('(Remaster)', '')
-        songName = songName.replace('Remaster', '')
-        songName = songName.replace('Acoustic', '')
-        songName = songName.replace('(Remix)', '')
-        songName = songName.replace('Remix', '')
+        for word in ['Remastered', 'remastered', 'Remaster', 'remaster', 'Acoustic', 'acoustic', 'EP Vesrion', 'Single Version', 'EP vesrion', 'single version', 'Vesrion', 'version', 'Remix', 'remix', '()']:
+            songName = songName.replace(word, '')
         artistName = ' '.join(artistName.split())
         songName = ' '.join(songName.split())
-        artistName.strip('- ')
-        songName.strip('- ')
+        songName = songName.replace('( )', '')
+        artistName = artistName.strip('- ')
+        songName = songName.strip('- ')
 
         print(f'{str(i + 1).rjust(3)}/{str(len(songs)).ljust(10)} {songName.ljust(80)} {artistName}')
         filePath = Path(f'arhiva/{songName} ♢ {artistName}.txt')
 
-        if not filePath.exists() or os.path.getsize(filePath) > 10000:
+        if not filePath.exists(): # or os.path.getsize(filePath) > 10000:
             file = open(filePath, 'w', encoding='utf-8')
 
             while True:
@@ -59,7 +54,7 @@ for page in range(1, pages + 1):
                     song = genius.search_song(songName, artistName)
                     break
                 except:
-                    print("               Exception occured! Trying again in 10 seconds...", end='\r')
+                    print('               Exception occured! Trying again in 10 seconds...', end='\r')
                     time.sleep(10)
                     sys.stdout.write('\033[K')
 

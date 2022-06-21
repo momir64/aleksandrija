@@ -22,7 +22,7 @@ print()
 
 for page in range(1, pages + 1):
     print()
-    print(f'Fetching page: {page}')
+    print(f'Fetching page {page} out of {pages}:')
     url = f'http://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user={username}&api_key={LastFmKey}&format=json&limit={perPage}&page={page}'
     songs = json.loads(urllib.request.urlopen(url).read().decode())['lovedtracks']['track']
 

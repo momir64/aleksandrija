@@ -33,20 +33,20 @@ for page in range(1, pages + 1):
         artistName = songs[i]["artist"]["name"]
 
         for c in '<>:"/\|?*':
-            songName = songName.replace('(Remastered)', '')
-            songName = songName.replace('Remastered', '')
-            songName = songName.replace('(Acoustic)', '')
-            songName = songName.replace('Acoustic', '')
-            songName = songName.replace('(Remix)', '')
-            songName = songName.replace('Remix', '')
             artistName = artistName.replace(c, '')
             songName = songName.replace(c, '')
-            artistName = ' '.join(artistName.split())
-            songName = ' '.join(songName.split())
-            artistName.strip()
-            songName.strip()
+        songName = songName.replace('(Remastered)', '')
+        songName = songName.replace('Remastered', '')
+        songName = songName.replace('(Acoustic)', '')
+        songName = songName.replace('Acoustic', '')
+        songName = songName.replace('(Remix)', '')
+        songName = songName.replace('Remix', '')
+        artistName = ' '.join(artistName.split())
+        songName = ' '.join(songName.split())
+        artistName.strip('- ')
+        songName.strip('- ')
 
-        print(f'{str(i + 1).rjust(3)}/{str(len(songs)).ljust(10)} {songName.ljust(50)} {artistName}')
+        print(f'{str(i + 1).rjust(3)}/{str(len(songs)).ljust(10)} {songName.ljust(80)} {artistName}')
         filePath = Path(f'arhiva/{songName} ♢ {artistName}.txt')
 
         if not filePath.exists() or os.path.getsize(filePath) > 10000:
